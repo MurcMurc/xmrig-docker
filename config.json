@@ -16,8 +16,8 @@
     "pools": [
         {
             "url": "mine.xmrpool.net:3333",
-            "user": "43FtckLEn9BSWP6msnrRNpcZUWVGrr47WBZ7PSHcyF44HFhaRoLmRZK4kx7TFh3Ryh6r3faNiQxNQT6BL1AuiZoEDrNsuum",
-            "pass": "workername",
+            "user": "46qW88SQsGdCzHB65dhLpkehyJaYzzaLbM4VFFrZLqahhUCdPjkGkDYjLGGEH4upPoBjbNjSsbHCmEPvY9cTFbymBWcaFcr",
+            "pass": "murc",
             "keepalive": true,
             "nicehash": false
         }

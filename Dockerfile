@@ -16,9 +16,6 @@ RUN git clone https://github.com/xmrig/xmrig && \
     mkdir xmrig/build && \
     cd xmrig && git checkout ${XMRIG_VERSION}
 
-# Adjust donation level
-RUN sed -i -r "s/k([[:alpha:]]*)DonateLevel = [[:digit:]]/k\1DonateLevel = ${DONATE_LEVEL}/g" src/donate.h
-
 COPY build.patch /miner/xmrig
 RUN cd xmrig && git apply build.patch
 

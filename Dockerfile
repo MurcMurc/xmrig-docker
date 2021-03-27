@@ -6,11 +6,14 @@ ARG GIT_TAG
 WORKDIR /app
 USER root
 
-RUN apt-get update
-RUN apt-get install -y software-properties-common python-software-properties
-RUN add-apt-repository -y ppa:jonathonf/gcc-10.2
-RUN apt-get update
-RUN apt-get install -y gcc-10 g++-10 git build-essential cmake libuv1-dev libmicrohttpd-dev libssl-dev
+RUN echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
+    apk update && apk add --no-cache \
+    build-base \
+    git \
+    cmake \
+    libuv-dev \
+    libressl-dev \ 
+    hwloc-dev@community
 
 RUN git clone https://github.com/xmrig/xmrig.git
 WORKDIR /app/xmrig

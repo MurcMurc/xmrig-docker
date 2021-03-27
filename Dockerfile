@@ -1,10 +1,7 @@
-FROM ubuntu:16.04
+FROM alpine:3.13 AS builder
 
-ARG DONATE_LEVEL=5
-ARG GIT_TAG
-
-WORKDIR /app
-USER root
+ARG XMRIG_VERSION='v6.10.0'
+WORKDIR /miner
 
 RUN echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     apk update && apk add --no-cache \
@@ -15,17 +12,19 @@ RUN echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /et
     libressl-dev \ 
     hwloc-dev@community
 
-RUN git clone https://github.com/xmrig/xmrig.git
-WORKDIR /app/xmrig
-RUN git checkout $GIT_TAG
+RUN git clone https://github.com/xmrig/xmrig && \
+    mkdir xmrig/build && \
+    cd xmrig && git checkout ${XMRIG_VERSION}
 
 # Adjust donation level
 RUN sed -i -r "s/k([[:alpha:]]*)DonateLevel = [[:digit:]]/k\1DonateLevel = ${DONATE_LEVEL}/g" src/donate.h
 
-RUN mkdir build
-WORKDIR /app/xmrig/build
-RUN cmake .. -DCMAKE_C_COMPILER=gcc-7 -DCMAKE_CXX_COMPILER=g++-7
-RUN make
+COPY build.patch /miner/xmrig
+RUN cd xmrig && git apply build.patch
+
+RUN cd xmrig/build && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release && \
+    make -j$(nproc)
 
 CMD ./xmrig -c $XMRIG_JSON_CONFIG_PATH
 
